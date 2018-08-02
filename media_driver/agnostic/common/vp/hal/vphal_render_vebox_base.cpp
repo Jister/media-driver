@@ -3082,7 +3082,8 @@ bool VPHAL_VEBOX_STATE::VeboxDNSurfaceLimitationSatisfied(
             CurrentSurface->CompressionMode == FFDNSurface->CompressionMode &&
             CurrentSurface->dwWidth         == FFDNSurface->dwWidth         &&
             CurrentSurface->dwHeight        == FFDNSurface->dwHeight        &&
-            CurrentSurface->dwPitch         == FFDNSurface->dwPitch)
+            CurrentSurface->dwPitch         == FFDNSurface->dwPitch         &&
+            CurrentSurface->pDenoiseParams->fDenoiseFactor == CurrentSurface->pDenoiseParams->fDenoiseFactor_prev)
         {
             return true;
         }

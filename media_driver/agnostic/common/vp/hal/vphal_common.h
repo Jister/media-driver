@@ -806,6 +806,7 @@ typedef struct _VPHAL_DENOISE_PARAMS
     bool                bEnableLuma;
     bool                bAutoDetect;
     float               fDenoiseFactor;
+    float               fDenoiseFactor_prev;
     VPHAL_NOISELEVEL    NoiseLevel;
 } VPHAL_DENOISE_PARAMS, *PVPHAL_DENOISE_PARAMS;
 

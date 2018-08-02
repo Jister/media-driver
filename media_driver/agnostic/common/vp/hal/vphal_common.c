@@ -446,7 +446,11 @@ MOS_STATUS VpHal_ReAllocateSurface(
         (pSurface->CompressionMode == CompressionMode)  &&
         (pSurface->TileType        == DefaultTileType))
     {
-        goto finish;
+        if(pSurface->pDenoiseParams != nullptr &&
+           pSurface->pDenoiseParams->fDenoiseFactor == pSurface->pDenoiseParams->fDenoiseFactor_prev)
+        {
+            goto finish;
+        } 
     }
 
     MOS_ZeroMemory(&AllocParams, sizeof(MOS_ALLOC_GFXRES_PARAMS));

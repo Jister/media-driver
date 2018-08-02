@@ -1858,6 +1858,7 @@ DdiVp_SetProcFilterDenoiseParams(
         return VA_STATUS_ERROR_INVALID_PARAMETER;
     }
 
+    pSrc->pDenoiseParams->fDenoiseFactor_prev = pSrc->pDenoiseParams->fDenoiseFactor;
     pSrc->pDenoiseParams->fDenoiseFactor = pDnParamBuff->value;
 
     // Luma and chroma denoise should be always enabled when noise reduction is needed
