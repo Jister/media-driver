@@ -446,8 +446,8 @@ MOS_STATUS VpHal_ReAllocateSurface(
         (pSurface->CompressionMode == CompressionMode)  &&
         (pSurface->TileType        == DefaultTileType))
     {
-        if(pSurface->pDenoiseParams != nullptr &&
-           pSurface->pDenoiseParams->fDenoiseFactor == pSurface->pDenoiseParams->fDenoiseFactor_prev)
+        if(!(pSurface->pDenoiseParams != nullptr &&
+           pSurface->pDenoiseParams->fDenoiseFactor != pSurface->pDenoiseParams->fDenoiseFactor_prev))
         {
             goto finish;
         } 
