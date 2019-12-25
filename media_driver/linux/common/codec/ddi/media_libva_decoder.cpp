@@ -56,7 +56,7 @@ static int32_t DdiDecode_GetDisplayInfo(VADriverContextP ctx)
     vsinfo.xres                           = 0;
     vsinfo.yres                           = 0;
 
-    fd = open("/dev/graphics/fb0",O_RDONLY);
+    fd = open("/dev/dri/card0",O_RDONLY);
     if(fd > 0)
     {
         if(ioctl(fd, FBIOGET_VSCREENINFO, &vsinfo) < 0)
