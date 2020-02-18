@@ -412,6 +412,10 @@ int32_t DdiMedia_MediaFormatToOsFormat(DDI_MEDIA_FORMAT format)
             return VA_FOURCC_ARGB;
         case Media_Format_B10G10R10A2:
             return VA_FOURCC_A2R10G10B10;
+        case Media_Format_R10G10B10X2:
+            return VA_FOURCC_X2B10G10R10;
+        case Media_Format_B10G10R10X2:
+            return VA_FOURCC_X2R10G10B10;
         case Media_Format_R5G6B5:
             return VA_FOURCC_R5G6B5;
         case Media_Format_R8G8B8:
@@ -501,6 +505,10 @@ DDI_MEDIA_FORMAT DdiMedia_OsFormatToMediaFormat(int32_t fourcc, int32_t rtformat
             return Media_Format_B10G10R10A2;
         case VA_FOURCC_A2B10G10R10:
             return Media_Format_R10G10B10A2;
+        case VA_FOURCC_X2R10G10B10:
+            return Media_Format_B10G10R10X2;
+        case VA_FOURCC_X2B10G10R10:
+            return Media_Format_R10G10B10X2;
         case VA_FOURCC_BGRA:
         case VA_FOURCC_ARGB:
 #ifdef VA_RT_FORMAT_RGB32_10BPP
@@ -4035,6 +4043,8 @@ VAStatus DdiMedia_CreateImage(
         case VA_FOURCC_XBGR:
         case VA_FOURCC_A2R10G10B10:
         case VA_FOURCC_A2B10G10R10:
+        case VA_FOURCC_X2R10G10B10:
+        case VA_FOURCC_X2B10G10R10:
             gmmParams.BaseHeight = MOS_ALIGN_CEIL(height, 32);
             break;
         default:
@@ -4100,6 +4110,8 @@ VAStatus DdiMedia_CreateImage(
         case VA_FOURCC_RGB565:
         case VA_FOURCC_A2R10G10B10:
         case VA_FOURCC_A2B10G10R10:
+        case VA_FOURCC_X2R10G10B10:
+        case VA_FOURCC_X2B10G10R10:
             vaimg->num_planes = 1;
             vaimg->pitches[0] = gmmPitch;
             vaimg->offsets[0] = 0;
@@ -4337,6 +4349,14 @@ VAStatus DdiMedia_DeriveImage (
     case Media_Format_B10G10R10A2:
         vaimg->format.bits_per_pixel    = 32;
         vaimg->format.alpha_mask        = RGB_10BIT_ALPHAMASK;
+        vaimg->data_size                = mediaSurface->iPitch * mediaSurface->iHeight;
+        vaimg->num_planes               = 1;
+        vaimg->pitches[0]               = mediaSurface->iPitch;
+        vaimg->offsets[0]               = 0;
+        break;
+    case Media_Format_R10G10B10X2:
+    case Media_Format_B10G10R10X2:
+        vaimg->format.bits_per_pixel    = 32;
         vaimg->data_size                = mediaSurface->iPitch * mediaSurface->iHeight;
         vaimg->num_planes               = 1;
         vaimg->pitches[0]               = mediaSurface->iPitch;
@@ -6145,6 +6165,10 @@ static uint32_t DdiMedia_GetDrmFormatOfSeparatePlane(uint32_t fourcc, int plane)
             return DRM_FORMAT_ARGB2101010;
         case VA_FOURCC_A2B10G10R10:
             return DRM_FORMAT_ABGR2101010;
+        case VA_FOURCC_X2R10G10B10:
+            return DRM_FORMAT_XRGB2101010;
+        case VA_FOURCC_X2B10G10R10:
+            return DRM_FORMAT_XBGR2101010;
         }
     }
     else
@@ -6221,6 +6245,10 @@ static uint32_t DdiMedia_GetDrmFormatOfCompositeObject(uint32_t fourcc)
         return DRM_FORMAT_ARGB2101010;
     case VA_FOURCC_A2B10G10R10:
         return DRM_FORMAT_ABGR2101010;
+    case VA_FOURCC_X2R10G10B10:
+        return DRM_FORMAT_XRGB2101010;
+    case VA_FOURCC_X2B10G10R10:
+        return DRM_FORMAT_XBGR2101010;
     }
     return 0;
 }

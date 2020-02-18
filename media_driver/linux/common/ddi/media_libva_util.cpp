@@ -222,7 +222,9 @@ VAStatus DdiMediaUtil_AllocateSurface(
         case Media_Format_R8G8B8A8:
         case Media_Format_R10G10B10A2:
         case Media_Format_B10G10R10A2:
-            if (VA_SURFACE_ATTRIB_USAGE_HINT_ENCODER != mediaSurface->surfaceUsageHint)
+        case Media_Format_R10G10B10X2:
+        case Media_Format_B10G10R10X2:
+        if (VA_SURFACE_ATTRIB_USAGE_HINT_ENCODER != mediaSurface->surfaceUsageHint)
             {
 #if UFO_GRALLOC_NEW_FORMAT
                  //Planar type surface align 64 to improve performance.
