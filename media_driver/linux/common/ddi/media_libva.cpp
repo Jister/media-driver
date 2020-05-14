@@ -4737,31 +4737,24 @@ static VAStatus DdiMedia_CopySurfaceToImage(
     uint8_t *ySrc = (uint8_t*)surfData;
     uint8_t *yDst = (uint8_t*)imageData;
 
-    if(surface->data_size == image->data_size)
+    DdiMedia_CopyPlane(yDst, image->pitches[0], ySrc, surface->iPitch, image->height);
+    if (image->num_planes > 1)
     {
-        MOS_SecureMemcpy(imageData, image->data_size, surfData, image->data_size);
-    }
-    else
-    {
-        DdiMedia_CopyPlane(yDst, image->pitches[0], ySrc, surface->iPitch, image->height);
-        if (image->num_planes > 1)
-        {
-            uint8_t *uSrc = ySrc + surface->iPitch * surface->iHeight;
-            uint8_t *uDst = yDst + image->offsets[1];
-            uint32_t chromaPitch;
-            uint32_t chromaHeight;
-            uint32_t imageChromaPitch;
-            uint32_t imageChromaHeight;
-            DdiMedia_GetChromaPitchHeight(DdiMedia_MediaFormatToOsFormat(surface->format), surface->iPitch, surface->iHeight, &chromaPitch, &chromaHeight);
-            DdiMedia_GetChromaPitchHeight(image->format.fourcc, image->pitches[0], image->height, &imageChromaPitch, &imageChromaHeight);
-            DdiMedia_CopyPlane(uDst, image->pitches[1], uSrc, chromaPitch, imageChromaHeight);
+        uint8_t *uSrc = ySrc + surface->iPitch * surface->iHeight;
+        uint8_t *uDst = yDst + image->offsets[1];
+        uint32_t chromaPitch;
+        uint32_t chromaHeight;
+        uint32_t imageChromaPitch;
+        uint32_t imageChromaHeight;
+        DdiMedia_GetChromaPitchHeight(DdiMedia_MediaFormatToOsFormat(surface->format), surface->iPitch, surface->iHeight, &chromaPitch, &chromaHeight);
+        DdiMedia_GetChromaPitchHeight(image->format.fourcc, image->pitches[0], image->height, &imageChromaPitch, &imageChromaHeight);
+        DdiMedia_CopyPlane(uDst, image->pitches[1], uSrc, chromaPitch, imageChromaHeight);
 
-            if(image->num_planes > 2)
-            {
-                uint8_t *vSrc = uSrc + chromaPitch * chromaHeight;
-                uint8_t *vDst = yDst + image->offsets[2];
-                DdiMedia_CopyPlane(vDst, image->pitches[2], vSrc, chromaPitch, imageChromaHeight);
-            }
+        if(image->num_planes > 2)
+        {
+            uint8_t *vSrc = uSrc + chromaPitch * chromaHeight;
+            uint8_t *vDst = yDst + image->offsets[2];
+            DdiMedia_CopyPlane(vDst, image->pitches[2], vSrc, chromaPitch, imageChromaHeight);
         }
     }
 
